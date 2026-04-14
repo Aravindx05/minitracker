@@ -4,7 +4,13 @@ const cors = require("cors");
 require("dotenv").config();
 
 const app = express();
-app.use(cors());
+const cors = require("cors");
+
+app.use(cors({
+  origin: "*",   // for now allow all (later restrict)
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  credentials: true
+}));
 app.use(express.json());
 
 mongoose.connect(process.env.MONGO_URI)
