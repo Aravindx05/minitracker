@@ -3,23 +3,32 @@ import { API } from "./api";
 
 function getColor(hours, date) {
   const today = new Date().toISOString().split("T")[0];
-  const startDate = localStorage.getItem("startDate");
+  const startDateRaw = localStorage.getItem("startDate");
+
+  // ⚠️ normalize startDate to YYYY-MM-DD
+  const startDate = startDateRaw
+    ? new Date(startDateRaw).toISOString().split("T")[0]
+    : null;
 
   // before user joined → white
   if (!startDate || date < startDate) return "#ebedf0";
 
-  // today → always white until user enters
+  // future days → white
+  if (date > today) return "#ebedf0";
+
+  // today → white until filled
   if (date === today && !hours) return "#ebedf0";
 
-  // past days after joining but missed → red
+  // past days missed → red
   if (date < today && !hours) return "#ff4d4d";
 
-  // if hours entered
+  // valid hours → green levels
   if (hours >= 14) return "#004d00";
   if (hours >= 12) return "#1a7f37";
   if (hours >= 8) return "#39d353";
 
-  return "#ff4d4d"; // < 8 → red
+  // less than 8 → red
+  return "#ff4d4d";
 }
 export default function App() {
   const [data, setData] = useState({});
