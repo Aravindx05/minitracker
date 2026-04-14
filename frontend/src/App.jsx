@@ -5,20 +5,21 @@ function getColor(hours, date) {
   const today = new Date().toISOString().split("T")[0];
   const startDate = localStorage.getItem("startDate");
 
-  // before joining → white
-  if (date < startDate) return "#ebedf0";
+  // before user joined → white
+  if (!startDate || date < startDate) return "#ebedf0";
 
-  // after joining but missed → red
+  // today → always white until user enters
+  if (date === today && !hours) return "#ebedf0";
+
+  // past days after joining but missed → red
   if (date < today && !hours) return "#ff4d4d";
 
-  // today or future → white
-  if (!hours) return "#ebedf0";
-
+  // if hours entered
   if (hours >= 14) return "#004d00";
   if (hours >= 12) return "#1a7f37";
   if (hours >= 8) return "#39d353";
 
-  return "#ff4d4d"; // <8 → red
+  return "#ff4d4d"; // < 8 → red
 }
 export default function App() {
   const [data, setData] = useState({});
